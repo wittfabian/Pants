@@ -8,6 +8,8 @@
 """
         
 import json
+import numpy as np
+import pandas as pd
 
 class World:
     """The nodes and edges of a particular problem.
@@ -79,15 +81,17 @@ class World:
         method.
         
         :return: a mapping of node ID pairs to :class:`Edge` instances.
-        :rtype: :class:`dict`
+        :rtype: :class:`ndarray`
         """
-        edges = {}
+        # edges = {}
+        edges = np.ndarray((len(self._nodes), len(self._nodes)), dtype=np.object)
         for m in self.nodes:
             for n in self.nodes:
                 a, b = self.data(m), self.data(n)
                 if a != b:
                     edge = Edge(a, b, length=self.lfunc(a, b))
                     edges[m, n] = edge
+
         return edges
         
     def reset_pheromone(self, level=0.01):
@@ -100,9 +104,10 @@ class World:
         :param float level: amount of pheromone to set on each edge 
                             (default=0.01)
         """
-        for edge in self.edges.values():
-            edge.pheromone = level
-        
+        for index, edge in np.ndenumerate(self.edges):
+            if isinstance(edge, Edge):
+                edge.pheromone = level
+
     def data(self, idx, idy=None):
         """Return the node data of a single id or the edge data of two ids.
 
@@ -124,6 +129,26 @@ class World:
         except IndexError:
             return None
 
+    def get_pheromone_matrix(self):
+        """Create pheromone matrix from the edges.
+
+        :return: pheromone matrix
+        :rtype: :class:`ndarray`
+        """
+        # matrix = np.zeros((len(self._nodes), len(self._nodes)), dtype=np.float)
+        matrix = np.ndarray((len(self._nodes), len(self._nodes)), dtype=np.float)
+        for m in self.nodes:
+            for n in self.nodes:
+                a, b = self.data(m), self.data(n)
+                if a != b:
+                    matrix[m, n] = self.data(m, n).pheromone
+                else:
+                    matrix[m, n] = 0.0
+
+        return matrix
+
+    def print_pheromone_matrix(self):
+        print(pd.DataFrame(self.get_pheromone_matrix()))
 
 class Edge:
     """This class represents the link between starting and ending nodes.
