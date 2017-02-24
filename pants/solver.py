@@ -26,7 +26,7 @@ class Solver:
     :param float t0: initial pheromone level along each :class:`Edge` of the
                      :class:`World` (>0, default=0.01)
     :param int limit: number of iterations to perform (default=100)
-    :param float ant_count: how many :class:`Ant`\s will be used 
+    :param int ant_count: how many :class:`Ant`\s will be used
                             (default=10)
     :param float elite: multiplier of the pheromone deposited by the elite
                         :class:`Ant` (default=0.5)

@@ -174,4 +174,20 @@ class Edge:
         if isinstance(other, self.__class__):
             return self.__dict__ == other.__dict__
         return False
+
+    def weigh(self, alpha, beta):
+        """Calculate the weight of the edge, given alpha and beta.
+
+        The weight of an edge is simply a representation of its perceived value
+        in finding a shorter solution. Larger weights increase the odds of the
+        edge being taken, whereas smaller weights decrease those odds.
+
+        :param float alpha: the relative importance of pheromone
+        :param float beta: the relative importance of distance
+        :return: the weight of edge
+        :rtype: float
+        """
+        pre = 1 / (self.length or 1)
+        post = self.pheromone
+        return post ** alpha * pre ** beta
         
