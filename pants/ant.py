@@ -218,8 +218,9 @@ class Ant:
         weights = []
         for move in choices:
             edge = self.world.edges[self.node, move]
-            weights.append(self.weigh(edge))
-        
+            # weights.append(self.weigh(edge))
+            weights.append(edge.weigh(alpha=self.alpha, beta=self.beta))
+
         # Choose one of them using a weighted probability.
         total = sum(weights)
         cumdist = list(itertools.accumulate(weights)) + [total]
@@ -278,20 +279,5 @@ class Ant:
                 plt.plot([act_item.position[0], next_item.position[0]], [act_item.position[1], next_item.position[1]], color='b')
                 print(act_item.position, next_item.position)
         plt.show()
-
-    def weigh(self, edge):
-        """Calculate the weight of the given *edge*.
-        
-        The weight of an edge is simply a representation of its perceived value
-        in finding a shorter solution. Larger weights increase the odds of the
-        edge being taken, whereas smaller weights decrease those odds.
-        
-        :param Edge edge: the edge to weigh
-        :return: the weight of *edge*
-        :rtype: float
-        """
-        pre = 1 / (edge.length or 1)
-        post = edge.pheromone
-        return post ** self.alpha * pre ** self.beta
 
     

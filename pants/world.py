@@ -62,7 +62,14 @@ class World:
         self.__class__.uid += 1
         self.name = kwargs.get('name', 'world{}'.format(self.uid))
         self.description = kwargs.get('description', None)
-        self._nodes = nodes
+        if all(isinstance(n, Node) for n in nodes):
+            self._nodes = nodes
+        elif all(isinstance(n, Position) for n in nodes):
+            self._nodes = []
+            for pos in nodes:
+                self._nodes.append(Node(pos))
+        else:
+            raise Exception('Type of nodes not known!')
         self.lfunc = lfunc
         self.edges = self.create_edges()
         
@@ -201,7 +208,7 @@ class Edge:
     def length(self):
         return self.lfunc(self.start.position, self.end.position)
 
-    def weigh(self, alpha, beta):
+    def weigh(self, **kwargs):
         """Calculate the weight of the edge, given alpha and beta.
 
         The weight of an edge is simply a representation of its perceived value
@@ -213,6 +220,15 @@ class Edge:
         :return: the weight of edge
         :rtype: float
         """
+        alpha = kwargs.get('alpha', None)
+        beta = kwargs.get('beta', None)
+
+        if alpha is None:
+            raise Exception('Param `alpha` is undefined')
+
+        if beta is None:
+            raise Exception('Param `beta` is undefined')
+
         pre = 1 / (self.length or 1)
         post = self.pheromone
         return post ** alpha * pre ** beta

@@ -49,12 +49,12 @@ TEST_COORDS_5 = [
 
 def dist(a, b):
     """Return the distance between two points represeted as a 2-tuple."""
-    return math.sqrt((a[1] - b[1]) ** 2 + (a[0] - b[0]) ** 2)
+    return math.sqrt(pow(a[1] - b[1], 2) + pow(a[0] - b[0], 2))
 
 
 if __name__ == "__main__":
     world = World(TEST_COORDS_33_NEW, dist)
-    solver = Solver(alpha=1, beta=3, rho=0.8, Q=1, t0=0.01, limit=100, ant_count=10, elite=0.5)
+    solver = Solver(alpha=1, beta=3, rho=0.8, Q=1, t0=0.01, limit=100, ant_count=20, elite=0.5)
 
     # world.plot_nodes()
     solver_setting_report_format = "\n".join([
