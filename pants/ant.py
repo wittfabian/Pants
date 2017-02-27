@@ -13,6 +13,7 @@ import random
 import bisect
 import itertools
 import functools
+import matplotlib.pyplot as plt
 
 from .world import World
 
@@ -256,6 +257,27 @@ class Ant:
         self.traveled.append(edge)
         self.distance += edge.length
         return edge
+
+    def plot_tour(self):
+        def iterate(iterable):
+            iterator = iter(iterable)
+            prev_item = None
+            current_item = next(iterator)  # throws StopIteration if empty.
+            first_item = current_item
+            for next_item in iterator:
+                yield (prev_item, current_item, next_item)
+                prev_item = current_item
+                current_item = next_item
+            yield (prev_item, current_item, first_item)
+
+        for prev_item, act_item, next_item in iterate(self.tour):
+            # points = [pos.position for pos in self._nodes]
+            plt.scatter(act_item.position[0], act_item.position[1], marker='o', color='r')
+
+            if next_item is not None:
+                plt.plot([act_item.position[0], next_item.position[0]], [act_item.position[1], next_item.position[1]], color='b')
+                print(act_item.position, next_item.position)
+        plt.show()
 
     def weigh(self, edge):
         """Calculate the weight of the given *edge*.

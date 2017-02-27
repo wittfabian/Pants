@@ -6,8 +6,7 @@
 .. moduleauthor:: Robert Grant <rhgrant10@gmail.com>
 
 """
-        
-import json
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
@@ -70,8 +69,12 @@ class World:
     @property
     def nodes(self):
         """Node IDs."""
-        return list(range(len(self._nodes)))
-    
+        # return list(range(len(self._nodes)))
+        node_list = []
+        for node in self._nodes:
+            node_list.append(node.uid)
+        return node_list
+
     def create_edges(self):
         """Create edges from the nodes.
         
@@ -85,12 +88,11 @@ class World:
         """
         # edges = {}
         edges = np.ndarray((len(self._nodes), len(self._nodes)), dtype=np.object)
-        for m in self.nodes:
-            for n in self.nodes:
-                a, b = self.data(m), self.data(n)
-                if a != b:
-                    edge = Edge(a, b, length=self.lfunc(a, b))
-                    edges[m, n] = edge
+        for m in self._nodes:
+            for n in self._nodes:
+                if m != n:
+                    edge = Edge(m, n, lfunc=self.lfunc)
+                    edges[m.uid, n.uid] = edge
 
         return edges
         
@@ -119,15 +121,27 @@ class World:
         :param int idy: the id of the second node (default is None)
         :return: the node with ID *idx* or the :class:`Edge` between nodes
                   with IDs *idx* and *idy*.
-        :rtype: node or :class:`Edge`
+        :rtype: :class:`Node` or :class:`Edge`
         """
         try:
             if idy is None:
-                return self._nodes[idx]
+                # return self._nodes[idx]
+                return self.find_note_by_id(idx)
             else:
                 return self.edges[idx, idy]
         except IndexError:
             return None
+
+    def find_note_by_id(self, id):
+        """Return the node of a single id.
+
+        :param int id: the id of the node
+        :return: the node with ID *id*
+        :rtype: :class:`Node`
+        """
+        for node in self._nodes:
+            if node.uid is id:
+                return node
 
     def get_pheromone_matrix(self):
         """Create pheromone matrix from the edges.
@@ -150,6 +164,12 @@ class World:
     def print_pheromone_matrix(self):
         print(pd.DataFrame(self.get_pheromone_matrix()))
 
+    def plot_nodes(self):
+        points = [pos.position for pos in self._nodes]
+        plt.plot(*zip(*points), marker='o', color='r', ls='')
+        plt.show()
+
+
 class Edge:
     """This class represents the link between starting and ending nodes.
 
@@ -164,16 +184,22 @@ class Edge:
     :param float pheromone: the amount of pheromone on the :class:`Edge` 
                             (default=0.1)
     """
-    def __init__(self, start, end, length=None, pheromone=None):
+    # def __init__(self, start, end, length=None, pheromone=None):
+    def __init__(self, start, end, lfunc, pheromone=None):
         self.start = start
         self.end = end
-        self.length = 1 if length is None else length
+        self.lfunc = lfunc
+        # self.length = 1 if length is None else length
         self.pheromone = 0.1 if pheromone is None else pheromone
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.__dict__ == other.__dict__
         return False
+
+    @property
+    def length(self):
+        return self.lfunc(self.start.position, self.end.position)
 
     def weigh(self, alpha, beta):
         """Calculate the weight of the edge, given alpha and beta.
@@ -190,4 +216,42 @@ class Edge:
         pre = 1 / (self.length or 1)
         post = self.pheromone
         return post ** alpha * pre ** beta
-        
+
+
+class Node:
+    """This class represents nodes.
+    """
+    uid = 0
+
+    def __init__(self, position, **kwargs):
+        self.uid = self.__class__.uid
+        self.__class__.uid += 1
+        self._position = position
+        self.name = kwargs.get('name', 'node{}'.format(self.uid))
+        self.description = kwargs.get('description', None)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.__dict__ == other.__dict__
+        return False
+
+    @property
+    def position(self):
+        return self._position.position
+
+
+class Position:
+    """This class represents the position of a node.
+    """
+    def __init__(self, x, y):
+        self._x = x
+        self._y = y
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.__dict__ == other.__dict__
+        return False
+
+    @property
+    def position(self):
+        return (self._x, self._y)

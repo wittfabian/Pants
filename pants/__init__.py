@@ -32,5 +32,5 @@ Wikipedia <http://en.wikipedia.org/wiki/Ant_colony_optimization_algorithms>`_.
 """
 
 from .ant import Ant 
-from .world import World, Edge
+from .world import World, Edge, Node, Position
 from .solver import Solver
