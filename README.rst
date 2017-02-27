@@ -71,7 +71,7 @@ requirements for node data of any sort.
       for _ in range(20):
         x = random.uniform(-10, 10)
         y = random.uniform(-10, 10)
-        nodes.append((x, y))
+        nodes.append(Node(Position(x, y)))
 
 
 3) Define your length function. This function must accept two nodes and
@@ -119,96 +119,6 @@ requirements for node data of any sort.
           assert solution.distance < best
           best = solution.distance
 
-Run the Demo
-------------
-
-Included is a 33 "city" demo script that can be run from the command line.
-
-.. code-block:: console
-    
-    user@host:~$ pants-demo -h
-    usage: pants-demo [-h] [-V] [-a A] [-b B] [-l L] [-p P] [-e E] [-q Q] [-t T]
-                      [-c N] [-d D]
-
-    Script th;at demos the ACO-Pants package.
-
-    optional arguments:
-      -h, --help         show this help message and exit
-      -V, --version      show program's version number and exit
-      -a A, --alpha A    relative importance placed on pheromones; default=1
-      -b B, --beta B     relative importance placed on distances; default=3
-      -l L, --limit L    number of iterations to perform; default=100
-      -p P, --rho P      ratio of evaporated pheromone (0 <= P <= 1); default=0.8
-      -e E, --elite E    ratio of elite ant's pheromone; default=0.5
-      -q Q, --Q Q        total pheromone capacity of each ant (Q > 0); default=1
-      -t T, --t0 T       initial amount of pheromone on every edge (T > 0);
-                         default=0.01
-      -c N, --count N    number of ants used in each iteration (N > 0); default=10
-      -d D, --dataset D  specify a particular set of demo data; default=33
-
-    For best results:
-      * 0.5 <= A <= 1
-      * 1.0 <= B <= 5
-      * A < B
-      * L >= 2000
-      * N > 1
-
-    For more information, please visit https://github.com/rhgrant10/Pants.
-    user@host:~$ pants-demo
-    Solver settings:
-    limit=100
-    rho=0.8, Q=1
-    alpha=1, beta=3
-    elite=0.5
-
-    Time Elapsed              Distance                 
-    --------------------------------------------------
-               0:00:00.017490 0.7981182992833705       
-               0:00:00.034784 0.738147755518648        
-               0:00:00.069041 0.694362159048816        
-               0:00:00.276027 0.6818083968312925       
-               0:00:00.379039 0.6669398280432167       
-               0:00:00.465924 0.6463548571712562       
-               0:00:00.585685 0.6416519698864324       
-               0:00:01.563389 0.6349308484274142       
-    --------------------------------------------------
-    Best solution:
-             0 = (34.02115, -84.267249)
-             9 = (34.048194, -84.262126)
-             6 = (34.044915, -84.255772)
-            22 = (34.061518, -84.243566)
-            23 = (34.062461, -84.240155)
-            18 = (34.060461, -84.237402)
-            17 = (34.060164, -84.242514)
-            12 = (34.04951, -84.226327)
-            11 = (34.048679, -84.224917)
-             8 = (34.046006, -84.225258)
-             7 = (34.045483, -84.221723)
-            13 = (34.051529, -84.218865)
-            14 = (34.055487, -84.217882)
-            16 = (34.059412, -84.216757)
-            25 = (34.066471, -84.217717)
-            24 = (34.064489, -84.22506)
-            20 = (34.063814, -84.225499)
-            10 = (34.048312, -84.208885)
-            15 = (34.056326, -84.20058)
-             5 = (34.024302, -84.16382)
-            32 = (34.118162, -84.163304)
-            31 = (34.116852, -84.163971)
-            30 = (34.109645, -84.177031)
-            29 = (34.10584, -84.21667)
-            28 = (34.071628, -84.265784)
-            27 = (34.068647, -84.283569)
-            26 = (34.068455, -84.283782)
-            19 = (34.061281, -84.334798)
-            21 = (34.061468, -84.33483)
-             2 = (34.022585, -84.36215)
-             3 = (34.022718, -84.361903)
-             4 = (34.023101, -84.36298)
-             1 = (34.021342, -84.363437)
-    Solution length: 0.6349308484274142
-    Found at 0:00:01.563389 out of 0:00:01.698616 seconds.
-    user@host:~$
 
 Known Bugs
 ----------
