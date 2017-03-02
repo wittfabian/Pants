@@ -208,6 +208,9 @@ class Edge:
     def length(self):
         return self.lfunc(self.start.position, self.end.position)
 
+    def __len__(self):
+        return self.lfunc(self.start.position, self.end.position)
+
     def weigh(self, **kwargs):
         """Calculate the weight of the edge, given alpha and beta.
 
@@ -270,4 +273,4 @@ class Position:
 
     @property
     def position(self):
-        return (self._x, self._y)
+        return self._x, self._y
