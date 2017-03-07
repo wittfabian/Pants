@@ -38,9 +38,6 @@ You can read more about `Ant Colony Optimization on
 Wikipedia <http://en.wikipedia.org/wiki/Ant_colony_optimization_algorithms>`_.
 
 
-Troubleshooting
----------------
-
 Credits
 -------
 
@@ -50,4 +47,4 @@ Credits
 License
 -------
 
-GPL
+GNU GENERAL PUBLIC LICENSE
