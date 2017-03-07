@@ -4,6 +4,8 @@ Pants
 
 A Python3 implementation of the Ant Colony Optimization Meta-Heuristic
 
+**Installation is not possible at this time. Repository is under development.**
+
 --------
 Overview
 --------
