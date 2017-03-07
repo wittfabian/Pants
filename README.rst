@@ -37,96 +37,6 @@ to strengthen it further, and the process repeats.
 You can read more about `Ant Colony Optimization on
 Wikipedia <http://en.wikipedia.org/wiki/Ant_colony_optimization_algorithms>`_.
 
-------------
-Installation
-------------
-
-Installation via ``pip``
-
-.. code-block:: console
-
-    $ pip3 install ACO-Pants
-
------
-Usage
------
-
-Using **Pants** is simple. The example here uses Euclidean distance
-between 2D nodes with ``(x, y)`` coordinates, but there are no real
-requirements for node data of any sort.
-
-1) Import **Pants** (along with any other packages you'll need).
-
-   .. code-block:: python
-
-        import pants
-        import math
-        import random
-
-2) Create your data points; these become the nodes. Here we create some
-   random 2D points. The only requirement for a node is that it is
-   distinguishable from all of the other nodes.
-
-   .. code-block:: python
-
-      nodes = []
-      for _ in range(20):
-        x = random.uniform(-10, 10)
-        y = random.uniform(-10, 10)
-        nodes.append(Node(Position(x, y)))
-
-
-3) Define your length function. This function must accept two nodes and
-   return the amount of "work" between them. In this case, Euclidean 
-   distance works well.
-
-   .. code-block:: python
-
-      def euclidean(a, b):
-          return math.sqrt(pow(a[1] - b[1], 2) + pow(a[0] - b[0], 2))
-
-4) Create the ``World`` from the nodes and the length function. 
-
-   .. code-block:: python
-
-        world = pants.World(nodes, euclidean)
-
-5) Create the ``Solver``.
-
-   .. code-block:: python
-
-        solver = pants.Solver()
-
-6) Solve the ``World`` with the ``Solver``. Two methods are provided for
-   finding solutions: ``solve()`` and ``solutions()``. The former
-   returns the best solution found, whereas the latter returns each
-   solution found if it is the best thus far.
-
-   .. code-block:: python
-
-        solution = solver.solve(world)
-        # or
-        solutions = solver.solutions(world)
-
-7) Inspect the solution(s).
-
-   .. code-block:: python
-
-        print(solution.distance)
-        print(solution.tour)    # Nodes visited in order
-        print(solution.path)    # Edges taken in order
-        # or
-        best = float("inf")
-        for solution in solutions:
-          assert solution.distance < best
-          best = solution.distance
-
-
-Known Bugs
-----------
-
-None of which I am currently aware. Please let me know if you find 
-otherwise.
 
 Troubleshooting
 ---------------
@@ -134,7 +44,8 @@ Troubleshooting
 Credits
 -------
 
--  Robert Grant rhgrant10@gmail.com
+- Robert Grant rhgrant10@gmail.com (Original author)
+- Fabian Witt @witt_fabian (forked by)
 
 License
 -------
