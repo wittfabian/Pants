@@ -54,7 +54,7 @@ def dist(a, b):
 
 if __name__ == "__main__":
     world = World(TEST_COORDS_33_NEW, dist)
-    solver = Solver(alpha=1, beta=3, rho=0.8, Q=1, t0=0.01, limit=100, ant_count=20, elite=0.5)
+    solver = Solver(alpha=1, beta=5, rho=0.01, Q=1, t0=0.01, limit=100, ant_count=20, elite=0.5)
 
     # world.plot_nodes()
     solver_setting_report_format = "\n".join([
@@ -77,6 +77,7 @@ if __name__ == "__main__":
     print(divider)
 
     fastest = None
+    fastest_time = None
     start_time = time.time()
     for i, ant in enumerate(solver.solutions(world)):
         fastest = ant
@@ -91,6 +92,6 @@ if __name__ == "__main__":
 
     print("Solution length: {}".format(fastest.distance))
     print("Found at {} out of {} seconds.".format(fastest_time, total_time))
-    # fastest.plot_tour()
+    fastest.plot_tour()
 
     # world.print_pheromone_matrix()

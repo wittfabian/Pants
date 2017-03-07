@@ -218,8 +218,8 @@ class Ant:
         weights = []
         for move in choices:
             edge = self.world.edges[self.node, move]
-            # weights.append(self.weigh(edge))
-            weights.append(edge.weigh(alpha=self.alpha, beta=self.beta))
+            # weights.append(self.weight(edge))
+            weights.append(edge.weight(alpha=self.alpha, beta=self.beta))
 
         # Choose one of them using a weighted probability.
         total = sum(weights)
@@ -277,7 +277,7 @@ class Ant:
 
             if next_item is not None:
                 plt.plot([act_item.position[0], next_item.position[0]], [act_item.position[1], next_item.position[1]], color='b')
-                print(act_item.position, next_item.position)
+
         plt.show()
 
     

@@ -102,6 +102,14 @@ class World:
                     edges[m.uid, n.uid] = edge
 
         return edges
+
+    def list_edges(self):
+        edges = []
+        for m in self._nodes:
+            for n in self._nodes:
+                if m != n:
+                    edges.append(self.edges[m.uid, n.uid])
+        return edges
         
     def reset_pheromone(self, level=0.01):
         """Reset the amount of pheromone on every edge to some base *level*.
@@ -211,7 +219,7 @@ class Edge:
     def __len__(self):
         return self.lfunc(self.start.position, self.end.position)
 
-    def weigh(self, **kwargs):
+    def weight(self, **kwargs):
         """Calculate the weight of the edge, given alpha and beta.
 
         The weight of an edge is simply a representation of its perceived value
@@ -232,8 +240,8 @@ class Edge:
         if beta is None:
             raise Exception('Param `beta` is undefined')
 
-        pre = 1 / (self.length or 1)
-        post = self.pheromone
+        pre = 1 / (self.length or 1)  # heuristic information
+        post = self.pheromone  # pheromone information
         return post ** alpha * pre ** beta
 
 

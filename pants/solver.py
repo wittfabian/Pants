@@ -73,7 +73,7 @@ class Solver:
         for ant in colony:
             ant.initialize(ant.world)
         
-    def aco(self, colony):
+    def aco(self, colony, world):
         """Return the best solution by performing the ACO meta-heuristic.
         
         This method lets every :class:`Ant` in the colony find a solution,
@@ -88,6 +88,7 @@ class Solver:
         :rtype: :class:`Ant`
         """
         self.find_solutions(colony)
+        self.evaporate_pheromone_matrix(world)
         self.global_update(colony)
         return sorted(colony)[0]
         
@@ -103,7 +104,7 @@ class Solver:
         colony = self.create_colony(world)
         for i in range(self.limit):
             self.reset_colony(colony)
-            local_best = self.aco(colony)
+            local_best = self.aco(colony, world)
             if global_best is None or local_best < global_best:
                 global_best = copy(local_best)
             self.trace_elite(global_best)
@@ -124,7 +125,7 @@ class Solver:
         colony = self.create_colony(world)
         for i in range(self.limit):
             self.reset_colony(colony)
-            local_best = self.aco(colony)
+            local_best = self.aco(colony, world)
             if global_best is None or local_best < global_best:
                 global_best = copy(local_best)
                 yield global_best
@@ -222,9 +223,13 @@ class Solver:
             for ant in ants:
                 if ant.can_move():
                     edge = ant.move()
-                    self.local_update(edge)
+                    # self.local_update(edge)
                 else:
                     ants_done += 1
+
+    def evaporate_pheromone_matrix(self, world):
+        for edge in world.list_edges():
+            edge.pheromone = (1 - self.rho) * edge.pheromone
 
     def local_update(self, edge):
         """Evaporate some of the pheromone on the given *edge*.
@@ -243,22 +248,22 @@ class Solver:
         of solutions that use it.
 
         This accomplishes the global update performed at the end of each
-        solving iteration. 
-        
-        .. note:: 
-        
-            This method should never let the pheromone on an edge decrease to 
+        solving iteration.
+
+        .. note::
+
+            This method should never let the pheromone on an edge decrease to
             less than its initial level.
 
         :param list ants: the ants to use for solving
         """
         ants = sorted(ants)[:len(ants) // 2]
         for a in ants:
-            p = self.q / a.distance
+            # p = self.q / a.distance
             for edge in a.path:
                 edge.pheromone = max(
                     self.t0,
-                    (1 - self.rho) * edge.pheromone + p)
+                    (1 - self.rho) * edge.pheromone + (1 / a.distance)) # (1 - self.rho) * edge.pheromone + p)
 
     def trace_elite(self, ant):
         """Deposit pheromone along the path of a particular ant.
@@ -277,4 +282,3 @@ class Solver:
             p = self.elite * self.q / ant.distance
             for edge in ant.path:
                 edge.pheromone += p
-    
